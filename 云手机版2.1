@@ -92,6 +92,8 @@ End Function
 function strategy() '升级政策
 tap 160, 160
 delay 1000
+tap 360, 800
+delay 500
 while true
     FindColor 80, 400, 430, 700,  "03fe01|07fc07", 0, 0.98, stx, sty
   if stx < 0 then
