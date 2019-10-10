@@ -1,0 +1,42 @@
+'云手机，适用分辨率设置： 720*1280 ,1080*1920
+'代码参考自nga fetztech 模拟器代码
+Dim screen_x = GetScreenX(), screen_y = GetScreenY()
+
+ '房子坐标 
+Dim hx() ={180, 360, 540, 180, 360, 540, 180, 360, 540}
+Dim hy() ={870, 760, 680, 690, 580, 500, 510, 400, 320}
+ '小火车坐标
+Dim tx() ={430, 530, 630}
+Dim ty() ={1100, 1040, 980}
+'功能性坐标
+Dim fx()={360, 120, 630, 600, 360, 50, 180}
+Dim fy()={800, 1200, 780, 1200, 1200, 100, 160}
+'坐标变换
+for j = 0 to 8
+hx(j)=hx(j)*screen_x/720
+hy(j)=hy(j)*screen_y/1280
+tx(j)=tx(j)*screen_x/720
+ty(j)=ty(j)*screen_y/1280
+fx(j)=fx(j)*screen_x/720
+fy(j)=fy(j)*screen_y/1280
+j=j+1
+next
+'功能性坐标定义
+Dim blan = {fx(0), fy(0)} '空白处，屏幕正中心
+Dim inst = {fx(1), fy(1)} '修建按钮坐标，屏幕左下
+Dim edit = {fx(2), fy(2)} '编辑按钮坐标 
+Dim upgr = {fx(3), fy(3)} '升级按钮坐标
+Dim chan = {fx(4), fy(4)} '替换按钮坐标
+Dim b = {fx(5), fy(5)} '选择区域时用到的坐标偏移量
+Dim stra = {fx(6), fy(6)} '政策中心起始点
+
+dim id=2 '指定升级建筑id，从左至右，从下到上依次为0～8
+
+Function money() 	'收钱 
+    For i=0 to 8		
+           Tap hx(i), hy(i) 	
+    Delay 1000 	
+    Next	 
+End Function 
+
+Function
