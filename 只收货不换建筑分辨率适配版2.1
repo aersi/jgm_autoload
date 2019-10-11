@@ -63,7 +63,8 @@ For i = 0 To 2
     FindColor tx(i)-b(0), ty(i) -b(1), tx(i), ty(i) - 0.5*b(1), "3CC1FF|FF989A",1,1, ssx, ssy
     FindColor tx(i)-b(0), ty(i) -b(1), tx(i), ty(i) - 0.5*b(1), "EAC254", 1, 1, sbx, sby
 
-//		ssx = 1 '收所有	
+//		ssx = 1 '收所有
+//                sbx=1	
 
    If sbx > - 1 Then    
 		 			flag = 1
@@ -72,7 +73,7 @@ For i = 0 To 2
            While True 			
 	               TouchDown tx(i), ty(i) 				
                   Delay 500 			
-	                FindColor hx(0)*.5, hy(8)*.5, hx(0)*3.5, hy(8), "44E167|4AD566|7FFD8E", 1, 0.98, ax, ay
+	                FindColor hx(0)*.5, hy(8)*.5, hx(0)*3.5, hy(0), "44E167|4AD566|7FFD8E", 1, 0.98, ax, ay
  				If ax > -1 and ay > -1 Then
  					TouchMove ax, ay
  					Delay 100
