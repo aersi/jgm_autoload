@@ -18,7 +18,7 @@ r2={rx(2), ry(0), rx(3), ry(1)}' 中包范围
 p={fx(2), fy(2), fx(3), fy(3)} ' 相册范围
 
 delay 5000
-Tap fx(1), fx(2) '进入商店 
+Tap fx(0), fy(0) '进入商店 
 Delay 100
 
 function openbag (bag, color)
@@ -43,7 +43,7 @@ Rem ffr
 	End If 
 Wend 
 end function
-' 主程序
+
 openbag(r1, "8ED142|89C832") '开小红包
 openbag(r2, "8ED142|89C832") '开中红包
 openbag(p, "81A92D|81A82B") '开相册
