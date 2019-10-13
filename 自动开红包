@@ -1,0 +1,49 @@
+ //'实现自动开完所有小包和相册，不会消耗蓝币购买 
+Dim r1, r2, p, x, y, cnt 
+Dim screen_x = GetScreenX(), screen_y = GetScreenY()
+Dim fx()={350, 360, 610,640} '功能按钮x，相册横坐标范围
+Dim fy()={1200, 660, 1010, 1030} '功能按钮y，相册纵坐标范围
+dim rx={170, 200,400, 430} '小包,中包横坐标范围
+dim ry={560, 580} '小包,中包纵坐标范围
+
+'坐标变换
+for j = 0 to 8
+fx(j)=fx(j)*screen_x/720
+fy(j)=fy(j)*screen_y/1280
+rx(j) = rx(j) * screen_x / 720
+ry(j)=ry(j)*screen_y/1280
+Next
+r1={rx(0), ry(0), rx(1), ry(1)} ' 小包范围
+r2={rx(2), ry(0), rx(3), ry(1)}' 中包范围
+p={fx(2), fy(2), fx(3), fy(3)} ' 相册范围
+
+delay 5000
+Tap fx(1), fx(2) '进入商店 
+Delay 100
+
+function openbag (bag, color)
+While True '开小包 
+	cnt = 0 	
+Rem ffr
+	FindColor bag(0), bag(1), bag(2), bag(3), color, 0, 0.95,x, y
+	If x > -1 Then 
+		Tap bag(0), bag(1) '包坐标 
+		Delay 500 
+		Tap fx(1), fy(1) '其他无影响位置坐标 
+		Delay 500 
+	Else 
+		cnt = cnt + 1 
+		If cnt > 10 Then 
+			cnt = 0 
+			Exit While 
+		End If 
+		Tap fx(1), fy(1)'其他无影响位置坐标 
+		Delay 500 
+		Goto ffr
+	End If 
+Wend 
+end function
+' 主程序
+openbag(r1, "8ED142|89C832") '开小红包
+openbag(r2, "8ED142|89C832") '开中红包
+openbag(p, "81A92D|81A82B") '开相册
