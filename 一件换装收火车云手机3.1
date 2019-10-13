@@ -6,47 +6,49 @@ Dim gh = {5, 7, 8, 13, 18, 19, 23, 28, 27} ' 收钱模式建筑列表
 //Dim lh = {0, 2, 9, 11, 13, 14, 26, 28, 27} ' 收货模式建筑列表
 //Dim gh = {0, 2, 9, 11, 13, 14, 21, 24, 25} ' 收钱模式建筑列表
 dim id=8 '指定升级建筑id，从左至右，从下到上依次为0～8
-Dim si=4 '指定升级第si个政策，从左至右，从下到上依次为0～4
+Dim s={4, 2, 1, 3, 2} '优先升级指定政策，否则。可以只填第一个，前两个，剩下的随意，也可以全部随意。从左至右，从上到下依次为0～4
 '***********************参数区*************************
 Dim screen_x = GetScreenX(), screen_y = GetScreenY()
  '房子坐标 
-Dim hx() ={180, 360, 540, 180, 360, 540, 180, 360, 540}
-Dim hy() ={870, 760, 680, 690, 580, 500, 510, 400, 320}
- '小火车坐标
-Dim tx() ={430, 530, 630}
-Dim ty() ={1100, 1040, 980}
+Dim hx() ={296, 550, 803, 296, 550, 803, 296, 550, 803}
+Dim hy() ={1262, 1133, 1008, 1008, 881, 756, 756, 628, 503}
+ '小火车坐标,泡泡偏移量
+Dim tx() ={660, 820, 980,100}
+Dim ty() ={1640, 1560, 1480,160}
 '功能性坐标
-Dim fx()={360, 120, 630, 600, 360, 50, 180}
-Dim fy()={800, 1200, 780, 1200, 1200, 100, 160}
-Dim gx()={440, 590, 530} '文字区域x：更换界面文字左右边界，政策中心中线
-Dim gy()={680, 1736,550, 1600, 10, 410, 700} '文字区域y
+Dim fx()={540,   100,  970,  880,  558,  75, 263}
+Dim fy()={1680, 1880, 1160, 1752, 1752, 150, 174}
+Dim gx()={440,  590, 530,    0,  0,   0   ,0, 200} '文字区域x：更换界面文字左右边界，2政策中心中线，7政策中心偏移量
+Dim gy()={680, 1736, 550, 1600, 10, 410, 700, 80} '文字区域y，2~6政策中心中线定位，7政策中心偏移量
+
 '更换界面文字上下沿，政策中心上下沿，当前政策定位点3个
 Dim stix()={-210, 210, -210, 210, -210} '政策中心5项定位偏移值
 Dim stiy()={140, 140, 320, 320, 500} '政策中心5项定位偏移值
 
 '坐标变换
 for j = 0 to 8
-hx(j)=hx(j)*screen_x/720
-hy(j)=hy(j)*screen_y/1280
-tx(j)=tx(j)*screen_x/720
-ty(j)=ty(j)*screen_y/1280
-fx(j)=fx(j)*screen_x/720
-fy(j) = fy(j) * screen_y / 1280
+hx(j)=hx(j)*screen_x/1080
+hy(j)=hy(j)*screen_y/1920
+tx(j)=tx(j)*screen_x/1080
+ty(j)=ty(j)*screen_y/1920
+fx(j)=fx(j)*screen_x/1080
+fy(j) = fy(j) * screen_y / 1920
 gx(j)=gx(j)*screen_x/1080
 gy(j) = gy(j) * screen_y / 1920
 stix(j)=stix(j)*screen_x/1080
 stiy(j) = stiy(j) * screen_y / 1920
 next
 '功能性坐标定义
-Dim blan = {fx(0), fy(0)} '空白处，屏幕正中心
+Dim blan = {fx(0), fy(0)} '空白处，屏幕正下方
 Dim inst = {fx(1), fy(1)} '修建按钮坐标，屏幕左下
 Dim edit = {fx(2), fy(2)} '编辑按钮坐标 
 Dim upgr = {fx(3), fy(3)} '升级按钮坐标
 Dim chan = {fx(4), fy(4)} '替换按钮坐标
-Dim b = {fx(5), fy(5)} '选择区域时用到的坐标偏移量
+Dim b = {tx(3), ty(3)} '选择区域时用到的坐标偏移量
 Dim stra = {fx(6), fy(6)} '政策中心起始点
+Dim bb = {gx(7), gy(7)} '选择区域时用到的坐标偏移量
 
-Dim nnc(9, 3)
+Dim nnc(9, 3) '字库
 nnc={ {0, "木屋","-20|32|FFFFFF,15|-2|FBD01B,65|3|FFFFFF,66|38|FFFFFF"},_
 {1, "钢结构房","28|39|FFFFFF,79|39|FFFFFF,107|40|FBD125,178|21|FFFFFF"},_
 {2, "平房" ,"-1|35|FBD125,17|38|FFFFFF,66|-3|FFFFFF,81|30|FFFFFF"},_
@@ -87,108 +89,103 @@ Delay 1000
 End Function
 
 Function upgrade(id) 	'升级指定建筑函数 	
-  Tap edit(0), edit(1)
-  Delay 100 	
-  Tap hx(id), hy(id ) '大哥 
-  Delay 500 
-	Tap upgr(0), upgr(1)
-	Delay 300 	
-  Tap edit(0), edit(1) 	
-  Delay 100 
+Tap edit(0), edit(1)
+Delay 100 	
+Tap hx(id), hy(id ) '大哥 
+Delay 500 
+Tap upgr(0), upgr(1)
+Delay 300 	
+Tap edit(0), edit(1) 	
+Delay 100 
 End Function
 
 Function loadtrain() 	'卸货函数
-  Dim ssx, ssy, sbx,sby,ax, ay, flag 	
-  flag = 0 	
+Dim ssx, ssy,ax, ay 		
 For i = 0 To 2 
-
 //    只收橙色，判断是否有紫色蓝色
     FindColor tx(i)-b(0), ty(i) -b(1), tx(i), ty(i) - 0.5*b(1), "3CC1FF", 1, 1, ssx, ssy 
-    FindColor tx(i)-b(0), ty(i) -b(1), tx(i), ty(i) - 0.5*b(1), "EAC254|FF989A", 1, 1, sbx, sby
 /*
 //只收橙色紫色，判断是否有蓝色
     FindColor tx(i)-b(0), ty(i) -b(1), tx(i), ty(i) - 0.5*b(1), "3CC1FF|FF989A",1,1, ssx, ssy
-    FindColor tx(i)-b(0), ty(i) -b(1), tx(i), ty(i) - 0.5*b(1), "EAC254", 1, 1, sbx, sby
-
-	ssx = 1 '收所有	
-    sbx = -1
+	ssx = 1 '收所有
 */
-   If sbx > - 1 Then    
-		 			flag = 1
-    end if
-	  If ssx > - 1 Then 			
-           While True 			
-	               TouchDown tx(i), ty(i) 				
-                  Delay 200 			
-	                FindColor hx(0)*.5, hy(8)*.5, hx(0)*3.5, hy(0), "44E167|4AD566|7FFD8E", 1, 0.98, ax, ay
- 				If ax > -1 and ay > -1 Then
- 					TouchMove ax, ay
- 					Delay 100
- 					TouchUp
- 					Delay 100
- 				Else
- 					TouchUp
- 					Delay 100
- 					Goto xx
- 				End If
- 			Wend
- 		End If
- 		Rem xx
+	If ssx > - 1 Then 			
+       	While True 			
+	       	TouchDown tx(i), ty(i) 				
+          	Delay 200 			
+	        FindColor hx(0)*.5, hy(8)*.5, hx(0)*3.3, hy(0), "44E167|4AD566|7FFD8E", 1, 0.98, ax, ay
+ 			If ax > -1 and ay > -1 Then
+ 				TouchMove ax, ay
+ 				Delay 100
+ 				TouchUp
+ 				Delay 100
+ 			Else
+ 				TouchUp
+ 				Delay 100
+ 				Goto xx
+ 			End If
+ 		Wend
+ 	End If
+ 	Rem xx
  	Next
- 	loadtrain = flag
  End Function
 
 Function RestartGame() '重启游戏函数
 Dim package = "com.tencent.jgm"
-TracePrint "重启游戏"
-Delay 500
 KillApp package
 Delay 1000
 RunApp package
-Delay 5000
+Delay 9000
 End Function
 
 '凌晨重启-注意模拟器时间要与实际之间一致
 Function MidNightRestart() '凌晨重启函数
   Dim hourNow = datetime.hour()
   Dim minuteNow = datetime.minute()
-
   If hourNow = 0 and minuteNow <= 3 Then
-TracePrint "当前时间:",hourNow,"时",minuteNow,"分,重启家国梦"
-    RestartGame() '杀后台
+	TracePrint "当前时间:",hourNow,"时",minuteNow,"分,重启家国梦"
+	RestartGame() '杀后台
   End If
 End Function
 
 function strategy() '升级政策函数
 tap stra(0),  stra(1) '打开政策中心界面
-delay 2000
-tap inst(0), .9*inst(1) ' 确定已完成的政策
 delay 1000
+tap blan(0), blan(1) ' 确定已完成的政策
+delay 500
 while true ' 寻找可升级政策
- 
-    FindColor stra(0)*.5, 8*b(0), stra(0)*2.4, 7*b(1),  "03fe01|07fc07", 0, 0.98, stx, sty
+    FindColor gx(2)-gx(7), gy(2), gx(2)+gx(7), gy(3),  "03fe01|07fc07", 0, 0.98, stx, sty
     if stx < 0 then
-        touchdown blan(0), 8*b(1)
+        touchdown gx(2), gy(3)*.7
         delay 500
-        touchmove blan(0), 4.8*b(1)
+        touchmove gx(2), gy(2)*1.1
         delay 300
         touchup
         delay 500
     Else 
     	FindMultiColor gx(2), gy(2), gx(2), gy(3), "FFFFFF", "0|" & gy(4) & "|FCDFAB," & "0|" & gy(5) & "|FCDFAB," & "0|" & gy(6) & "|E8E5E0", 0, 0.99, cx, cy	
-    	While cx < 0
+        	While cx < 0
         	Delay 500
-        	touchdown blan(0), 8*b(1)
+        	touchdown gx(2), gy(3)*.7
         	delay 200
-        	touchmove blan(0), 7*b(1)
+        	touchmove gx(2), gy(3)*.5
         	delay 300
         	touchup
         	Delay 500
         	FindMultiColor gx(2), gy(2), gx(2), gy(3), "FFFFFF", "0|" & gy(4) & "|FCDFAB," & "0|" & gy(5) & "|FCDFAB," & "0|" & gy(6) & "|E8E5E0", 0, 0.99, cx, cy
         Wend       
-        tap cx+stix(si), cy+stiy(si) '选择第si个可升级项
+        stx = -1
+        i=1
+        While stx < 0 
+            FindColor cx+stix(s(i))+stix(0), cy+stiy(s(i))-.6*stiy(0), cx+stix(s(i)), cy+stiy(s(i))+.6*stiy(0),  "03fe01|07fc07", 0, 0.98, stx, sty
+            if i > 5  then
+                FindColor gx(2)-gx(7), gy(2), gx(2)+gx(7), gy(3),  "03fe01|07fc07", 0, 0.98, stx, sty
+           	End If
+			i=i+1           	
+        Wend
+      	tap stx+bb(0), sty+bb(1) '选择第 个可升级项
         delay 1000
-        tap blan(0), 8*b(1) ' 升级
+        tap gx(2), gy(3)*.75 ' 升级
         delay 500
 		tap inst(0), inst(1) '退出政策界面
 		delay 500
@@ -200,8 +197,8 @@ End Function
 
 function housechan(i, j) '更换建筑操作函数
 delay 500
-tap hx(i), hy(i)-.2*b(1) ' 点击要更换建筑的位置
-// TracePrint i, nnc(gh(i),1), "to" ,nnc(j, 1)
+tap hx(i), hy(i)-.8*bb(1) ' 点击要更换建筑的位置
+TracePrint i, nnc(gh(i),1), "to" ,nnc(j, 1)
 delay 1000
 tap chan(0), chan(1) '打开更换列表
 delay 1000
@@ -228,9 +225,9 @@ nncc = c(0) & "|" & c(1) & "|" & c(2) & "," & c(3) & "|" & c(4) & "|" & c(5) & "
 while true '翻页查找建筑
     FindmultiColor gx(0), gy(0), gx(1),  gy(1), "FFFFFF",nncc, 0, .98, cx, cy 
 if cx < 0 and cy <0 then
-     TouchDown blan(0), b(1)*8
+     TouchDown gx(2), gy(1)*.75
       Delay 300 	
- 		 TouchMove blan(0), b(1)*5
+ 		 TouchMove gx(2), gy(0)*1.1
  		 Delay 300
 		TouchUp
 	  	Delay 2000
@@ -239,14 +236,14 @@ else
 end if
 wend
 //TracePrint cx, cy
-    tap cx, cy+b(1)  '找到建筑，点击
-    delay 2000
+    tap cx, cy+2*bb(1)  '找到建筑，点击
+    delay 1500
     tap inst(0), inst(1)
     delay 200
 end function
 
 function changehouse(j) '轮流更换建筑函数
-    delay 1000
+    delay 500
     tap edit(0), edit(1) '打开编辑按钮
     for i=0 to 8
         if lh(i) =gh(i) then
@@ -265,57 +262,59 @@ changehouse(lh) '收货前换建筑
  	    Dim m=1, n = 1, iter = 120, cx1, cy1, stx, sty,res
      	While n < iter
             delay 1000 
-    		FindColor stra(0), stra(1)- 0.3*b(1), stra(0)+b(0), stra(1) + 0.3*b(1), "00d900" , 0, 0.98, stx, sty
+    		FindColor stra(0), stra(1), stra(0)*1.3, stra(1)*1.4, "00d900" , 0, 0.98, stx, sty
     		if stx > -1 then
         		strategy()
     		end if
- 		    FindColor tx(0)-b(0), ty(0) -b(1), tx(0), ty(0) - 0.5*b(1), "EAC254|FF989A|3CC1FF", 1, 1, cx1, cy1
+ 		    FindColor tx(0)-tx(3), ty(0) -ty(3), tx(0), ty(0) - 0.5*ty(3),  "EAC254|FF989A|3CC1FF", 1, 1, cx1, cy1
             If cx1<0 And cy1< 0  Then
                 m=m+1
- 			        If n = 1 Then
-                		tap inst(0), inst(1)  '增加容错率，防止 弹出 通知 卡死
-						money ()'收钱,注释掉此行后不进行收钱             
-			    		upgrade (id) '升级建筑，注释掉此行后不进行升级
- 			        Else
- 			        End If
+ 			    If n = 1 Then
+                	tap inst(0), inst(1)  '增加容错率，防止 弹出 通知 卡死
+            		delay 500
+            		tap inst(0), inst(1)  '增加容错率，防止 弹出 通知 卡死
+					money ()'收钱,注释掉此行后不进行收钱             
+					upgrade (id) '升级建筑，注释掉此行后不进行升级
+ 			    Else
+ 			    End If
  		    Else
- 				res = loadtrain() '卸货
- 				If res = 1 Then  	
-  	        		RestartGame() '重新登陆
- 				End If
+ 				res = loadtrain() '卸货 	
+  	        	RestartGame() '重新登陆
  			End If
  		       n = n + 1
  	    Wend
-      if m=180 then '连续3分钟无火车，退出收货模式
+      	if m=119 then '连续2分钟无火车，退出收货模式
             exit while
-      end if
+      	end if
   Wend
 changehouse(gh) '收完货，换回建筑
 End Function
 
 
 '主程序
-Dim cx, cy, stx, sty, t =120
+Dim i, cx, cy, stx, sty, t =120
 while true
     MidNightRestart() 
     Delay 1000
-    FindColor stra(0), stra(1)- 0.3*b(1), stra(0)+b(0), stra(1) + 0.3*b(1), "00d900" , 0, 0.98, stx, sty
+    FindColor stra(0), stra(1), stra(0)*1.3, stra(1)*1.4, "00d900" , 0, 0.98, stx, sty
     if stx > -1 then
         strategy()
     end if
-  	FindColor tx(0)-b(0), ty(0) -b(1), tx(0), ty(0) - 0.5*b(1), "EAC254|FF989A|3CC1FF", 1, 1, cx, cy
-        If cx<0 And cy< 0  Then
-            if t= 120 then
-                tap inst(0), inst(1)  '增加容错率，防止 弹出 通知 卡死
-				money ()'收钱,注释掉此行后不进行收钱             
-			    upgrade (id) '升级建筑，注释掉此行后不进行升级
-			    t=1
-            else
-            end if
+  	FindColor tx(0)-tx(3), ty(0) -ty(3), tx(0), ty(0) - 0.5*ty(3),  "EAC254|FF989A|3CC1FF", 1, 1, cx, cy
+    If cx<0 And cy< 0  Then
+        if t= 120 then
+            tap inst(0), inst(1)  '增加容错率，防止 弹出 通知 卡死
+            delay 500
+            tap inst(0), inst(1)  '增加容错率，防止 弹出 通知 卡死
+			money ()'收钱,注释掉此行后不进行收钱             
+			upgrade (id) '升级建筑，注释掉此行后不进行升级
+			t=1
         else
-            loadtime()
         end if
-t=t+ 1
+    else
+        loadtime()
+    end if
+	t=t+ 1
 wend
 
 
