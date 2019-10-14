@@ -1,4 +1,4 @@
-'云手机，适用分辨率设置： 720*1280 ,1080*1920
+'云手机，适用分辨率设置： 720*1280 ,1280*1920
 '代码参考自nga fetztech 模拟器代码
 '***********************设置区*************************
 Dim lh = {3, 6, 9, 16, 18, 19, 29, 28, 27} ' 收货模式建筑列表
@@ -135,7 +135,7 @@ Dim package = "com.tencent.jgm"
 KillApp package
 Delay 1000
 RunApp package
-Delay 9000
+Delay 15000
 End Function
 
 '凌晨重启-注意模拟器时间要与实际之间一致
@@ -222,6 +222,10 @@ c(9) = b3(1)*screen_x/1080
 c(10) = a(7)*screen_y/1920
 c(11) = a(8)
 nncc = c(0) & "|" & c(1) & "|" & c(2) & "," & c(3) & "|" & c(4) & "|" & c(5) & "," & c(6) & "|" & c(7) & "|" & c(8) & "," & c(9) & "|" & c(10) & "|" & c(11)
+    FindmultiColor gx(0), gy(2)*.4, gx(1),  gy(2), "FFFFFF",nncc, 0, .98, cx, cy 
+if cx > -1 and cy >-1 then
+goto nochan
+else
 while true '翻页查找建筑
     FindmultiColor gx(0), gy(0), gx(1),  gy(1), "FFFFFF",nncc, 0, .98, cx, cy 
 if cx < 0 and cy <0 then
@@ -238,6 +242,8 @@ wend
 //TracePrint cx, cy
     tap cx, cy+2*bb(1)  '找到建筑，点击
     delay 1500
+end if
+Rem nochan
     tap inst(0), inst(1)
     delay 200
 end function
@@ -316,7 +322,6 @@ while true
     end if
 	t=t+ 1
 wend
-
 
 
 
