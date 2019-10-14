@@ -115,7 +115,7 @@ End Function
 function strategy() '升级政策函数
 tap stra(0),  stra(1) '打开政策中心界面
 delay 500
-tap blan(0), blan(1) ' 确定已完成的政策
+tap fx(0), gy(8) ' 确定已完成的政策
 delay 500
 while true ' 寻找可升级政策
     FindColor gx(2)-gx(7), gy(2), gx(2)+gx(7), gy(3),  "03fe01|07fc07", 0, 0.98, stx, sty
