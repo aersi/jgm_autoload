@@ -106,10 +106,10 @@ while qt1<20 ' 寻找可升级政策
         	qt2=qt2+1
         Wend
         stx = -1
-        i=1
+        i=0
         While stx < 0 
             FindColor cx+stix(s(i))+stix(0), cy+stiy(s(i))-.6*stiy(0), cx+stix(s(i)), cy+stiy(s(i))+.6*stiy(0),  "03fe01|07fc07", 0, 0.98, stx, sty
-            if i > 5  then
+            if i > 4  then
                 FindColor gx(2)-gx(7)*2, gy(2), gx(2)+gx(7), gy(3),  "03fe01|07fc07", 0, 0.98, stx, sty
            	End If
 			i=i+1           	
