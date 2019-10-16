@@ -151,6 +151,8 @@ ssx = 1 '收所有
  				Delay 100
  				TouchUp
  				Delay 100
+                                count =count+1
+
 				TracePrint "当前时间:",datetime.hour(),"时",datetime.minute(),"分,共收取",count,"份货物"
 				Call File.Append(FileName,datetime.hour()&":"&datetime.minute()&":"&datetime.second()&",共收取"&count&"份货物"& chr(10)) 				
  			Else
