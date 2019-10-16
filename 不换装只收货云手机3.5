@@ -1,9 +1,12 @@
-'云手机，适用分辨率设置： 720*1280 ,1080*1920
+SetScreenScale 1080,1920 '云手机，适用分辨率设置： 720*1280 ,1080*1920
 '代码参考自nga fetztech 模拟器代码
+Import "File.lua"
+dim FileName = "log.txt"//路径和日志名字可自定义"/storage/emulated/0/Mobileanjian/"=/sdcard/
 '***********************设置区*************************
 dim id=8 '指定升级建筑id，从左至右，从下到上依次为0～8
 Dim s={4, 3, 1, 3, 2} '优先升级指定政策，否则。可以只填第一个，前两个，剩下的随意，也可以全部随意。从左至右，从上到下依次为0～4
 '***********************参数区*************************
+Dim count=0 '统计收货数
 Dim screen_x = GetScreenX(), screen_y = GetScreenY()
  '房子坐标 
 Dim hx() ={296, 550, 803, 296, 550, 803, 296, 550, 803}
@@ -21,19 +24,6 @@ Dim gy()={680, 1736, 550, 1600, 10, 410, 700, 80} '文字区域y，2~6政策中�
 Dim stix()={-210, 210, -210, 210, -210} '政策中心5项定位偏移值
 Dim stiy()={140, 140, 320, 320, 500} '政策中心5项定位偏移值
 
-'坐标变换
-for j = 0 to 8
-hx(j)=hx(j)*screen_x/1080
-hy(j)=hy(j)*screen_y/1920
-tx(j)=tx(j)*screen_x/1080
-ty(j)=ty(j)*screen_y/1920
-fx(j)=fx(j)*screen_x/1080
-fy(j) = fy(j) * screen_y / 1920
-gx(j)=gx(j)*screen_x/1080
-gy(j) = gy(j) * screen_y / 1920
-stix(j)=stix(j)*screen_x/1080
-stiy(j) = stiy(j) * screen_y / 1920
-next
 '功能性坐标定义
 Dim blan = {fx(0), fy(0)} '空白处，屏幕正下方
 Dim inst = {fx(1), fy(1)} '修建按钮坐标，屏幕左下
@@ -45,80 +35,55 @@ Dim stra = {fx(6), fy(6)} '政策中心起始点
 Dim bb = {gx(7), gy(7)} '选择区域时用到的坐标偏移量
 '***********************自定义函数区*************************
 Function money() 	'收钱函数
-Swipe hx(0),hy(0),hx(2),hy(2),100
-Swipe hx(2), hy(2), hx(8), hy(8), 100
-Swipe hx(8), hy(8), hx(6), hy(6), 100
-Swipe hx(4),hy(4),hx(3),hy(3),100
-Delay 1000 		 
+	Swipe hx(0),hy(0),hx(2),hy(2),200
+	Delay 200 		 
+	Swipe hx(5), hy(5), hx(3), hy(3), 200	
+	Delay 200 		 
+	Swipe hx(6), hy(6), hx(8), hy(8), 200
+	Delay 1000 		 
 End Function	 
 
 Function upgrade(id) 	'升级指定建筑函数 	
-  Tap edit(0), edit(1)
-  Delay 100 	
-  Tap hx(id), hy(id )  
-  Delay 500 
+	Tap edit(0), edit(1)
+	Delay 100 	
+	Tap hx(id), hy(id )  
+	Delay 500 
 	Tap upgr(0), upgr(1)
 	Delay 300 	
-  Tap edit(0), edit(1) 	
-  Delay 100 
+	Tap edit(0), edit(1) 	
+	Delay 100 
 End Function
 
-Function loadtrain() 	'卸货函数
-Dim ssx, ssy,ax, ay 		
-For i = 0 To 2 
-//    只收橙色，判断是否有紫色蓝色
-    FindColor tx(i)-b(0), ty(i) -b(1), tx(i), ty(i) - 0.5*b(1), "3CC1FF", 1, 1, ssx, ssy 
-/*
-//只收橙色紫色，判断是否有蓝色
-    FindColor tx(i)-b(0), ty(i) -b(1), tx(i), ty(i) - 0.5*b(1), "3CC1FF|FF989A",1,1, ssx, ssy
-	ssx = 1 '收所有
-*/
-	If ssx > - 1 Then 			
-       	While True 			
-	       	TouchDown tx(i), ty(i) 				
-          	Delay 200 			
-	        FindColor hx(0)*.5, hy(8)*.5, hx(0)*3.3, hy(0), "44E167|4AD566|7FFD8E", 1, 0.98, ax, ay
- 			If ax > -1 and ay > -1 Then
- 				TouchMove ax, ay
- 				Delay 100
- 				TouchUp
- 				Delay 100
- 			Else
- 				TouchUp
- 				Delay 100
- 				Goto xx
- 			End If
- 		Wend
- 	End If
- 	Rem xx
- 	Next
- End Function
-
+ 
 Function RestartGame() '重启游戏函数
-Dim package = "com.tencent.jgm"
-KillApp package
-Delay 1000
-RunApp package
-Delay 15000
+	Dim package = "com.tencent.jgm"
+	KillApp package
+	TracePrint "当前时间:",datetime.hour(),"时",datetime.hour(),"分,重启家国梦"
+	Call File.Append(FileName,datetime.hour()&":"&datetime.minute()&":"&datetime.second()&",重启家国梦"& chr(10))
+	Delay 1000
+	RunApp package
+	Delay 15000
 End Function
 
 '凌晨重启-注意模拟器时间要与实际之间一致
-Function MidNightRestart() '凌晨重启函数
-  Dim hourNow = datetime.hour()
-  Dim minuteNow = datetime.minute()
-  If hourNow = 0 and minuteNow <= 3 Then
-	TracePrint "当前时间:",hourNow,"时",minuteNow,"分,重启家国梦"
-	RestartGame() '杀后台
-  End If
+Function MidNightRestart() '凌晨重启函数)
+	If datetime.hour() = 0 and datetime.minute() <= 3 Then
+		TracePrint "当前时间:",datetime.hour(),"时",datetime.minute(),"分,重启家国梦"
+		RestartGame() '杀后台
+	End If
 End Function
 
 function strategy() '升级政策函数
 tap stra(0),  stra(1) '打开政策中心界面
-delay 3000
+delay 2000
 tap blan(0), blan(1) ' 确定已完成的政策
-delay 500
-while true ' 寻找可升级政策
-    FindColor gx(2)-gx(7), gy(2), gx(2)+gx(7), gy(3),  "03fe01|07fc07", 0, 0.98, stx, sty
+Delay 1000
+tap blan(0), blan(1) ' 确定已完成的政策
+Delay 200
+Dim qt1,qt2
+qt1=1
+while qt1<20 ' 寻找可升级政策
+    FindColor gx(2)-gx(7)*2, gy(2), gx(2)+gx(7), gy(3),  "03fe01|07fc07", 0, 0.98, stx, sty
     if stx < 0 then
         touchdown gx(2), gy(3)*.7
         delay 500
@@ -127,8 +92,9 @@ while true ' 寻找可升级政策
         touchup
         delay 500
     Else 
-    	FindMultiColor gx(2), gy(2), gx(2), gy(3), "FFFFFF", "0|" & gy(4) & "|FCDFAB," & "0|" & gy(5) & "|FCDFAB," & "0|" & gy(6) & "|E8E5E0", 0, 0.99, cx, cy	
-        	While cx < 0
+    	FindMultiColor gx(2), gy(2), gx(2), gy(3), "FFFFFF", "0|" & gy(4) & "|FCDFAB," & "0|" & gy(5) & "|FCDFAB," & "0|" & gy(6) & "|E8E5E0", 0, 0.99, cx, cy
+    	qt2=1
+        While cx < 0 and qt2 < 10
         	Delay 500
         	touchdown gx(2), gy(3)*.7
         	delay 200
@@ -137,29 +103,72 @@ while true ' 寻找可升级政策
         	touchup
         	Delay 500
         	FindMultiColor gx(2), gy(2), gx(2), gy(3), "FFFFFF", "0|" & gy(4) & "|FCDFAB," & "0|" & gy(5) & "|FCDFAB," & "0|" & gy(6) & "|E8E5E0", 0, 0.99, cx, cy
-        Wend       
+        	qt2=qt2+1
+        Wend
         stx = -1
         i=1
         While stx < 0 
             FindColor cx+stix(s(i))+stix(0), cy+stiy(s(i))-.6*stiy(0), cx+stix(s(i)), cy+stiy(s(i))+.6*stiy(0),  "03fe01|07fc07", 0, 0.98, stx, sty
             if i > 5  then
-                FindColor gx(2)-gx(7), gy(2), gx(2)+gx(7), gy(3),  "03fe01|07fc07", 0, 0.98, stx, sty
+                FindColor gx(2)-gx(7)*2, gy(2), gx(2)+gx(7), gy(3),  "03fe01|07fc07", 0, 0.98, stx, sty
            	End If
 			i=i+1           	
         Wend
-      	tap stx+bb(0), sty+bb(1) '选择第 个可升级项
-        delay 1000
-        tap gx(2), gy(3)*.75 ' 升级
-        delay 500
-		tap inst(0), inst(1) '退出政策界面
-		delay 500
-		tap inst(0), inst(1) '退出政策界面
     	exit while
-    end if
+    End If
+    qt1=qt1+1
 wend
+	TracePrint "当前时间:",datetime.hour(),"时",datetime.minute(),"分,重启家国梦"
+    Call File.Append(FileName,datetime.hour()&":"&datetime.minute()&":"&datetime.second()&",升级政策"& chr(10))
+    tap stx+bb(0), sty+bb(1) '选择第 个可升级项
+    delay 1000
+    tap gx(2), gy(3)*.75 ' 升级
+    delay 500
+	tap inst(0), inst(1) '退出政策界面
+	delay 500
+	tap inst(0), inst(1) '退出政策界面
+End Function
+
+Function loadtrain() 	'卸货函数
+Dim ssx, ssy,ax, ay 		
+For i = 0 To 2 
+/*
+//    只收橙色，判断是否有紫色蓝色
+    FindColor tx(i)-b(0), ty(i) -b(1), tx(i), ty(i) - 0.5*b(1), "3CC1FF", 1, 1, ssx, ssy 
+
+//只收橙色紫色，判断是否有蓝色
+    FindColor tx(i)-b(0), ty(i) -b(1), tx(i), ty(i) - 0.5*b(1), "3CC1FF|FF989A",1,1, ssx, ssy
+*/	
+ssx = 1 '收所有
+
+	If ssx > - 1 Then 			
+       	While True 			
+	       	TouchDown tx(i), ty(i) 				
+          	Delay 200 			
+	        FindColor hx(0) * .5, hy(8) * .5, hx(0) * 3.3, hy(0), "44E167|4AD566|7FFD8E", 1, 0.98, ax, ay
+	        //
+ 			If ax > -1 and ay > -1 Then 
+ 				count=count+1
+ 				TouchMove ax, ay
+ 				Delay 100
+ 				TouchUp
+ 				Delay 100
+				TracePrint "当前时间:",datetime.hour(),"时",datetime.minute(),"分,共收取",count,"份货物"
+				Call File.Append(FileName,datetime.hour()&":"&datetime.minute()&":"&datetime.second()&",共收取"&count&"份货物"& chr(10)) 				
+ 			Else
+ 				TouchUp
+ 				Delay 100
+ 				Goto xx
+ 			End If
+ 			//
+ 		Wend
+ 	End If
+ 	Rem xx
+ 	Next
 End Function
 
 '主程序
+Call File.Write(FileName, datetime.hour()&":"&datetime.minute()&":"&datetime.second()&"，开始运行"& chr(10))//这边有加上执行该命令相应的系统时间
  While True
  	Dim i, cx, cy, cx1, cy1, stx, sty,res, n = 1, iter = 120
     While n < iter
@@ -172,7 +181,9 @@ End Function
         If cx1<0 And cy1< 0  Then
  			If n =  1 Then
        			MidNightRestart()     
-                tap inst(0), inst(1)  '增加容错率，防止 弹出 通知 卡死
+            	tap inst(0), inst(1)  '增加容错率，防止 弹出 通知 卡死
+            	delay 500
+            	tap inst(0), inst(1)  '增加容错率，防止 弹出 通知 卡死
             	delay 500
             	tap inst(0), inst(1)  '增加容错率，防止 弹出 通知 卡死
             	money ()'收钱,注释掉此行后不进行收钱             
@@ -185,4 +196,5 @@ End Function
  		End If
  		n = n + 1
  	Wend
+
 Wend
