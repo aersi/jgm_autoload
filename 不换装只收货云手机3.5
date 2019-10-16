@@ -132,15 +132,13 @@ End Function
 Function loadtrain() 	'卸货函数
 Dim ssx, ssy,ax, ay 		
 For i = 0 To 2 
-/*
 //    只收橙色，判断是否有紫色蓝色
     FindColor tx(i)-b(0), ty(i) -b(1), tx(i), ty(i) - 0.5*b(1), "3CC1FF", 1, 1, ssx, ssy 
-
+/*
 //只收橙色紫色，判断是否有蓝色
-    FindColor tx(i)-b(0), ty(i) -b(1), tx(i), ty(i) - 0.5*b(1), "3CC1FF|FF989A",1,1, ssx, ssy
-*/	
+    FindColor tx(i)-b(0), ty(i) -b(1), tx(i), ty(i) - 0.5*b(1), "3CC1FF|FF989A",1,1, ssx, ssy	
 ssx = 1 '收所有
-
+*/
 	If ssx > - 1 Then 			
        	While True 			
 	       	TouchDown tx(i), ty(i) 				
