@@ -1,0 +1,8 @@
+'先打开建筑中心，点开需要升级的建筑，输入升级等级
+SetScreenScale 720,1280 
+dim i
+delay 5000
+for i=1 to 100 '升级等级
+tap 360, 900
+delay 200
+next
