@@ -112,21 +112,36 @@ Function RestartGame() '重启游戏函数
 	KillApp package
 	Delay 1000
 	RunApp package
-	Delay 16000
-	FindColor stu(0)*.88, stu(1)*.98, stu(0)*1.08, stu(1)*1.01, "FFBF33", 1, 0.98, cx, cy
- 	If cx > -1 and cy > -1 Then 
-		ShowMessage "有点卡，稍等一会"
-//		TracePrint "有点卡，稍等一会"
-		Delay 5000
-		Else 		
-		ShowMessage "顺利重启"
-//		TracePrint "顺利重启"
-	End If
-    tap inst(0), inst(1)  '增加容错率，防止 弹出 通知 卡死
-    delay 500
-    tap inst(0), inst(1)  '增加容错率，防止 弹出 通知 卡死
-    delay 500
+	i=0
+	While i<10 
+			Delay 1000
+			i=i+1
+			ShowMessage "重启中，已用时"& i &"秒"
+			TracePrint "重启中，已用时"& i &"秒"
+	Wend 
+	FindColor inst(0)*.88, inst(1)*.98, inst(0)*1.08, inst(1)*1.01, "04C178", 1, 0.99, cx, cy
+	While cx < 0
+		Delay 1000
+		i=i+1
+		FindColor stu(0)*.88, stu(1)*.98, stu(0)*1.08, stu(1)*1.01, "FFBF33", 1, 0.99, cx, cy
+ 		If cx > -1 and cy > -1 Then 
+				ShowMessage "有点卡，稍等一会 "& i &"秒"
+				TracePrint "有点卡，稍等一会 "& i &"秒"
+			Else 		
+				ShowMessage "重启中，已用时"& i &"秒"
+				TracePrint "重启中，已用时"& i &"秒"
+			End If
+		FindColor inst(0) * .88, inst(1) * .98, inst(0) * 1.08, inst(1) * 1.01, "04C178", 1, 0.99, cx, cy
+		If i > 60 Then 
+			ShowMessage "重启出现问题，尝试再次重启..."
+			TracePrint "重启出现问题，尝试再次重启..."
+			RestartGame() 
+		End If
+	Wend
+	ShowMessage "顺利重启"
+	TracePrint "顺利重启"
 End Function
+
 
 '凌晨重启-注意模拟器时间要与实际之间一致
 Function MidNightRestart() '凌晨重启函数)
